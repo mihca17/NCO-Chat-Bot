@@ -1,1 +1,5 @@
-package NCO_Chat_Bot
+package main
+
+func main(){
+	Server("localhost", "8080")
+}
