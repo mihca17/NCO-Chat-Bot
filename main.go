@@ -1,5 +1,8 @@
 package main
 
-func main(){
-	Server("localhost", "8080")
+func main() {
+	err := Server("localhost", "8080")
+	if err != nil {
+		return
+	}
 }
