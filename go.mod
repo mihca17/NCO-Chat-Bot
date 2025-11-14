@@ -1,10 +1,3 @@
-module main
+module NCO-Chat-Bot
 
 go 1.25
-
-require (
-)
-
-require (
-
-)
