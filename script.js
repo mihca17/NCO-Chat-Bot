@@ -1,219 +1,107 @@
-ymaps.ready(init);
+let myMap;
 
-function init() {
-    console.log('✅ Яндекс.Карты успешно загружены');
-    
-    // Создаем карту
-    var map = new ymaps.Map('map', {
-        center: [56.85, 53.22], // Центр России
-        zoom: 4,
-        controls: ['zoomControl', 'fullscreenControl', 'typeSelector', 'rulerControl']
+// Города присутствия Росатома
+const cities = [
+    { name: "Ангарск", region: "Иркутская область", coords: [52.5618, 103.9238], organizations : [{ orgname : "ОО ТОС АГО \"12а микрорайон\"", category : "Местное сообщество и развитие территорий", description : "Повышение качества жизни жителей 12а микрорайона г.Ангарска Иркутской области", contacts : "https://vk.com/id746471055"}] },
+    { name: "Волгодонск", region: "Ростовская область", coords: [47.5142, 42.2075],organizations : [{ orgname : "Благотворительный общественно полезный фонд помощи социально незащищенным слоям населения \"Платформа добрых дел\"", category : "Социальная защита (помощь людям в трудной ситуации)", description : "Благотворительный общественно полезный фонд помощи социально незащищенным слоям населения «Платформа добрых дел» Основной вид деятельности (ОКВЭД) 64.99", contacts : "нет"}]  },
+    { name: "Глазов", region: "Удмуртская Республика", coords: [58.1489, 52.6603],organizations : []  },
+    { name: "Десногорск", region: "Смоленская область", coords: [54.1405, 33.3144] },
+    { name: "Димитровград", region: "Ульяновская область", coords: [54.2201, 49.5701] },
+    { name: "Железногорск", region: "Красноярский край", coords: [56.2304, 93.4842] },
+    { name: "ЗАТО Заречный", region: "Пензенская область", coords: [53.1925, 45.1844] },
+    { name: "Заречный", region: "Свердловская область", coords: [56.8008, 61.3128] },
+    { name: "Зеленогорск", region: "Красноярский край", coords: [55.9511, 92.5953] },
+    { name: "Краснокаменск", region: "Забайкальский край", coords: [50.0942, 118.0439] },
+    { name: "Курчатов", region: "Курская область", coords: [51.8061, 35.0591] },
+    { name: "Лесной", region: "Свердловская область", coords: [58.6350, 59.7770] },
+    { name: "Неман", region: "Калининградская область", coords: [55.1108, 22.0334] },
+    { name: "Нововоронеж", region: "Воронежская область", coords: [51.3014, 39.2214] },
+    { name: "Новоуральск", region: "Свердловская область", coords: [57.2439, 60.0922] },
+    { name: "Обнинск", region: "Калужская область", coords: [55.0950, 36.6138] },
+    { name: "Озерск", region: "Челябинская область", coords: [55.7300, 60.7100] },
+    { name: "Певек", region: "Чукотский АО", coords: [69.9883, 170.3074] },
+    { name: "Полярные Зори", region: "Мурманская область", coords: [67.3750, 32.4383] },
+    { name: "Саров", region: "Нижегородская область", coords: [54.9586, 43.3100] },
+    { name: "Северск", region: "Томская область", coords: [56.0891, 85.5625] },
+    { name: "Снежинск", region: "Челябинская область", coords: [56.0419, 60.0981] },
+    { name: "Советск", region: "Калининградская область", coords: [55.0650, 21.5061] },
+    { name: "Сосновый Бор", region: "Ленинградская область", coords: [59.8600, 29.0800] },
+    { name: "Трехгорный", region: "Челябинская область", coords: [55.8600, 60.6400] },
+    { name: "Удомля", region: "Тверская область", coords: [57.8800, 34.9600] },
+    { name: "Усолье-Сибирское", region: "Иркутская область", coords: [52.7600, 103.6300] },
+    { name: "Электросталь", region: "Московская область", coords: [55.7800, 38.4400] },
+    { name: "Энергодар", region: "Запорожская область", coords: [47.5000, 34.6500] }
+];
+function initMap() {
+    document.querySelector('.loading').style.display = 'none';
+
+    myMap = new ymaps.Map('map', {
+        center: [55.7558, 37.6176], // Москва по умолчанию
+        zoom: 5,
+        controls: ['zoomControl', 'fullscreenControl']
     });
 
-    // Добавляем поведение карты
-    map.behaviors.enable(['scrollZoom', 'dblClickZoom']);
+    // Добавляем все метки
+    cities.forEach(city => {
+        const placemark = new ymaps.Placemark(
+            city.coords,
+            {
+                balloonContent: `<b>${city.name}</b>, ${city.region}`,
+                hintContent: `${city.name}`
+            },
+            {
+                preset: 'islands#blueCircleIcon'
+            }
+        );
 
-    // Города-миллионники России с более подробными данными
-    var millionCities = [
-        {
-            name: 'Москва',
-            coords: [55.7558, 37.6173],
-            population: '12.7 млн',
-            founded: '1147 г.',
-            area: '2561 км²',
-            color: 'islands#redIcon'
-        },
-        {
-            name: 'Санкт-Петербург',
-            coords: [59.9343, 30.3351],
-            population: '5.6 млн',
-            founded: '1703 г.',
-            area: '1439 км²',
-            color: 'islands#blueIcon'
-        },
-        {
-            name: 'Новосибирск',
-            coords: [55.0084, 82.9357],
-            population: '1.6 млн',
-            founded: '1893 г.',
-            area: '505 км²',
-            color: 'islands#darkOrangeIcon'
-        },
-        {
-            name: 'Екатеринбург',
-            coords: [56.8389, 60.6057],
-            population: '1.5 млн',
-            founded: '1723 г.',
-            area: '495 км²',
-            color: 'islands#darkOrangeIcon'
-        },
-        {
-            name: 'Казань',
-            coords: [55.7961, 49.1064],
-            population: '1.3 млн',
-            founded: '1005 г.',
-            area: '614 км²',
-            color: 'islands#greenIcon'
-        },
-        {
-            name: 'Нижний Новгород',
-            coords: [56.3269, 44.0065],
-            population: '1.2 млн',
-            founded: '1221 г.',
-            area: '466 км²',
-            color: 'islands#greenIcon'
-        },
-        {
-            name: 'Челябинск',
-            coords: [55.1644, 61.4368],
-            population: '1.2 млн',
-            founded: '1736 г.',
-            area: '530 км²',
-            color: 'islands#greenIcon'
-        },
-        {
-            name: 'Красноярск',
-            coords: [56.0153, 92.8932],
-            population: '1.2 млн',
-            founded: '1628 г.',
-            area: '379 км²',
-            color: 'islands#greenIcon'
-        },
-        {
-            name: 'Самара',
-            coords: [53.1959, 50.1002],
-            population: '1.1 млн',
-            founded: '1586 г.',
-            area: '541 км²',
-            color: 'islands#violetIcon'
-        },
-        {
-            name: 'Уфа',
-            coords: [54.7355, 55.9587],
-            population: '1.1 млн',
-            founded: '1574 г.',
-            area: '708 км²',
-            color: 'islands#violetIcon'
-        },
-        {
-            name: 'Ростов-на-Дону',
-            coords: [47.2225, 39.7188],
-            population: '1.1 млн',
-            founded: '1749 г.',
-            area: '348 км²',
-            color: 'islands#violetIcon'
-        },
-        {
-            name: 'Омск',
-            coords: [54.9924, 73.3686],
-            population: '1.1 млн',
-            founded: '1716 г.',
-            area: '567 км²',
-            color: 'islands#violetIcon'
-        },
-        {
-            name: 'Краснодар',
-            coords: [45.0355, 38.9753],
-            population: '1.1 млн',
-            founded: '1793 г.',
-            area: '841 км²',
-            color: 'islands#violetIcon'
-        },
-        {
-            name: 'Воронеж',
-            coords: [51.6720, 39.1843],
-            population: '1.1 млн',
-            founded: '1586 г.',
-            area: '596 км²',
-            color: 'islands#violetIcon'
-        },
-        {
-            name: 'Пермь',
-            coords: [58.0105, 56.2502],
-            population: '1.0 млн',
-            founded: '1723 г.',
-            area: '800 км²',
-            color: 'islands#orangeIcon'
-        },
-        {
-            name: 'Волгоград',
-            coords: [48.7194, 44.5018],
-            population: '1.0 млн',
-            founded: '1589 г.',
-            area: '859 км²',
-            color: 'islands#orangeIcon'
-        }
-    ];
+        myMap.geoObjects.add(placemark);
 
-    // Создаем кластер для меток
-    var clusterer = new ymaps.Clusterer({
-        clusterDisableClickZoom: true,
-        clusterOpenBalloonOnClick: true,
-        clusterBalloonContentLayout: 'cluster#balloonTwoColumns',
-        clusterBalloonPanelMaxMapArea: 0,
-        clusterBalloonContentLayoutWidth: 300,
-        clusterBalloonContentLayoutHeight: 200,
-        clusterBalloonPagerSize: 5
-    });
-
-    // Добавляем метки для каждого города
-    millionCities.forEach(function(city, index) {
-        var placemark = new ymaps.Placemark(city.coords, {
-            balloonContentHeader: `<strong>${city.name}</strong>`,
-            balloonContentBody: `
-                <div class="balloon">
-                    <p><strong>Население:</strong> ${city.population}</p>
-                    <p><strong>Основан:</strong> ${city.founded}</p>
-                    <p><strong>Площадь:</strong> ${city.area}</p>
-                    <p><strong>Регион:</strong> ${getRegion(city.name)}</p>
-                </div>
-            `,
-            balloonContentFooter: '<em>Город-миллионник России</em>',
-            hintContent: `${city.name} - ${city.population}`
-        }, {
-            preset: city.color,
-            balloonCloseButton: true,
-            hideIconOnBalloonOpen: false
+        // При клике на метку открываем карточку НКО с информацией об организациях
+        placemark.events.add('click', function () {
+            displayOrgCard(city.organizations);
         });
-
-        clusterer.add(placemark);
     });
+}
 
-    // Добавляем кластер на карту
-    map.geoObjects.add(clusterer);
+// Функция для отображения информации об организациях в карточке
+function displayOrgCard(orgs) {
+    const card = document.getElementById('ngoCard');
+    const cardContent = document.querySelector('#ngoCard .card-content');
 
-    // Функция для определения региона
-    function getRegion(cityName) {
-        var regions = {
-            'Москва': 'Центральный федеральный округ',
-            'Санкт-Петербург': 'Северо-Западный федеральный округ',
-            'Новосибирск': 'Сибирский федеральный округ',
-            'Екатеринбург': 'Уральский федеральный округ',
-            'Казань': 'Приволжский федеральный округ',
-            'Нижний Новгород': 'Приволжский федеральный округ',
-            'Челябинск': 'Уральский федеральный округ',
-            'Красноярск': 'Сибирский федеральный округ',
-            'Самара': 'Приволжский федеральный округ',
-            'Уфа': 'Приволжский федеральный округ',
-            'Ростов-на-Дону': 'Южный федеральный округ',
-            'Омск': 'Сибирский федеральный округ',
-            'Краснодар': 'Южный федеральный округ',
-            'Воронеж': 'Центральный федеральный округ',
-            'Пермь': 'Приволжский федеральный округ',
-            'Волгоград': 'Южный федеральный округ'
-        };
-        return regions[cityName] || 'Россия';
+    if (!cardContent) {
+        // Если элемента .card-content нет, создадим его
+        card.innerHTML = `
+            <span class="close-btn">&times;</span>
+            <div class="card-content"></div>
+        `;
     }
 
-    // Подгоняем карту чтобы были видны все метки
-    map.setBounds(clusterer.getBounds(), {
-        checkZoomRange: true,
-        zoomMargin: 50
+    let contentHTML = '';
+    orgs.forEach(org => {
+        contentHTML += `
+            <div class="org-item">
+                <h3>${org.orgname}</h3>
+                <p><strong>Категория:</strong> ${org.category}</p>
+                <p><strong>Описание:</strong> ${org.description}</p>
+                <p><strong>Контакты:</strong> <a href="${org.contacts}" target="_blank">${org.contacts}</a></p>
+            </div>
+            <hr>
+        `;
     });
 
-    // Обновляем статистику
-    document.getElementById('stats').textContent = 
-        `Всего городов-миллионников: ${millionCities.length} • Общее население: ≈30 млн человек`;
-
-    console.log(`🗺️ Карта успешно инициализирована с ${millionCities.length} городами`);
+    document.querySelector('#ngoCard .card-content').innerHTML = contentHTML;
+    card.style.display = 'block';
 }
+
+document.querySelector('.close-btn').addEventListener('click', () => {
+    document.getElementById('ngoCard').style.display = 'none';
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
+
+ymaps.ready(initMap);

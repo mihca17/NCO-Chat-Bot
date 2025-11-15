@@ -3,35 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Города-миллионники России</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Карта добрых дел</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="sidebar">
-            <h1>INFO</h1>
+    <header>
+        <img src="https://downloader.disk.yandex.ru/preview/4b2ad2bc4929efba90215b5ee5fe54104cd611aedab40729dd6f27aaa4cfb290/69189eaf/BG0FSwDtkbhILlrizEkEaZfFbrBCUX9dqehD2zddpFBtzRHkpa8obRk8YEB2OkQj70SCQ_cKH-vpJhoYPzTnJQ%3D%3D?uid=0&filename=LOGO_ROSATOM_rus_HOR_WHITE_PNG.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v3&size=1920x1152" alt="Логотип Росатома" class="logo">
+        <div class="title">Карта добрых дел</div>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <input type="text" class="search-box" placeholder="Поиск по названию НКО...">
+            <div class="filters">
+                <button class="filter-btn">Все</button>
+                <button class="filter-btn active">Образование</button>
+                <button class="filter-btn">Экология</button>
+                <button class="filter-btn">Помощь детям</button>
+                <button class="filter-btn">Пожилым</button>
+            </div>
         </div>
-        <div class="main-content">
-            <h1 class="title">🏙️ Города-миллионники России</h1>
-            <p class="subtitle">Интерактивная карта крупнейших городов страны</p>
-            
-            <div class="map-container">
-                <div id="map" class="map">
-                    <div class="loading">Загрузка карты...</div>
-                </div>
-            </div>
-            
-            <div class="stats" id="stats">
-                Всего городов-миллионников: 16
-            </div>
-            
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color"></div>
-                    <span>Города с населением более 1 миллиона человек</span>
-                </div>
-            </div>
+
+        <div id="map" class="map">
+            <div class="loading">Загрузка карты...</div>
+        </div>
+
+        <div class="ngo-card" id="ngoCard">
+            <span class="close-btn">&times;</span>
+            <h3>Добросердие</h3>
+            <p><strong>Категория:</strong> Помощь детям</p>
+            <p><strong>Описание:</strong> Организация помогает детям из малообеспеченных семей.</p>
+            <p><strong>Телефон:</strong> +7 (999) 123-45-67</p>
+            <p><strong>Сайт:</strong> <a href="#">dobro.ru</a></p>
         </div>
     </div>
 
