@@ -1,9 +1,9 @@
 package main
 
 import (
+	"NCO-Chat-Bot/database/repository"
+	"NCO-Chat-Bot/logger"
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -22,7 +22,7 @@ type Response struct {
 	Data    any    `json:"data,omitempty"`
 }
 
-func StartServer(address string, port string) error {
+func StartServer(address string, port string, repo *repository.SQLiteRepository) error {
 	// Обработчик для статических файлов (CSS, JS, изображения)
 	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
 		// Безопасное получение пути к файлу
@@ -83,7 +83,7 @@ func StartServer(address string, port string) error {
 				return
 			}
 
-			fmt.Printf("📨 Получено сообщение от пользователя: %s\n", msg.Text)
+			logger.Info("📨 Получено сообщение от пользователя: " + msg.Text)
 
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(Response{
@@ -99,7 +99,7 @@ func StartServer(address string, port string) error {
 		w.Header().Set("Content-Type", "application/json")
 
 		if r.Method == "GET" {
-			fmt.Printf("📊 Получен GET запрос на информацию\n")
+			logger.Info("📊 Получен GET запрос на информацию")
 
 			// Генерируем примерные данные
 			info := map[string]any{
@@ -122,7 +122,7 @@ func StartServer(address string, port string) error {
 		}
 	})
 
-	log.Printf("🚀 Сервер запущен на http://%s:%s", address, port)
-	log.Printf("📁 Обслуживаются статические файлы из текущей директории")
+	logger.Success("🚀 Сервер запущен на http://" + address + ":" + port)
+	logger.Info("📁 Обслуживаются статические файлы из текущей директории")
 	return http.ListenAndServe(address+":"+port, nil)
 }
