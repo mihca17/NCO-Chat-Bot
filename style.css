@@ -17,6 +17,7 @@ header {
     padding: 15px 40px;
     background-color: #0057b7; /* Цвет Росатома */
     color: white;
+    width: 100vw;
 }
 
 .logo {
@@ -32,7 +33,6 @@ header {
 /* Основной контейнер */
 .container {
     display: flex;
-    flex-direction: column;
     height: calc(100vh - 80px); /* Вычесть высоту шапки */
     padding: 10px;
 }
@@ -40,10 +40,13 @@ header {
 /* Панель управления */
 .controls {
     padding: 10px;
+    width: 500px; /* ✅ Фиксированная ширина вместо min-width */
+    flex: 0 0 500px; /* ✅ flex-shrink: 0 запрещает сжатие */
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 10px;
+    overflow: auto; /* ✅ Прокрутка внутри если контент не помещается */
 }
 
 .search-box {
@@ -76,6 +79,7 @@ header {
 /* Карта */
 .map {
     flex-grow: 1;
+    min-width: 600px;
     position: relative;
     border-radius: 8px;
     overflow: hidden;
