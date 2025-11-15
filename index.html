@@ -4,33 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Карта добрых дел</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/static/style.css">
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
-    <header>
-        <img src="https://downloader.disk.yandex.ru/preview/4b2ad2bc4929efba90215b5ee5fe54104cd611aedab40729dd6f27aaa4cfb290/69189eaf/BG0FSwDtkbhILlrizEkEaZfFbrBCUX9dqehD2zddpFBtzRHkpa8obRk8YEB2OkQj70SCQ_cKH-vpJhoYPzTnJQ%3D%3D?uid=0&filename=LOGO_ROSATOM_rus_HOR_WHITE_PNG.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v3&size=1920x1152" alt="Логотип Росатома" class="logo">
-        <div class="title">Карта добрых дел</div>
-    </header>
+<header>
+    <img src="https://downloader.disk.yandex.ru/preview/4b2ad2bc4929efba90215b5ee5fe54104cd611aedab40729dd6f27aaa4cfb290/69189eaf/BG0FSwDtkbhILlrizEkEaZfFbrBCUX9dqehD2zddpFBtzRHkpa8obRk8YEB2OkQj70SCQ_cKH-vpJhoYPzTnJQ%3D%3D?uid=0&filename=LOGO_ROSATOM_rus_HOR_WHITE_PNG.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v3&size=1920x1152" alt="Логотип Росатома" class="logo">
+    <div class="title">Карта добрых дел</div>
+</header>
 
-    <div class="container">
-        <div class="controls">
-            <input type="text" class="search-box" placeholder="Поиск по названию НКО...">
-            <div class="filters">
-                <button class="filter-btn">Все</button>
-                <button class="filter-btn active">Образование</button>
-                <button class="filter-btn">Экология</button>
-                <button class="filter-btn">Помощь детям</button>
-                <button class="filter-btn">Пожилым</button>
-            </div>
+<div class="container">
+    <div class="controls">
+        <input type="text" class="search-box" placeholder="Поиск по названию НКО...">
+        <div class="filters">
+            <button class="filter-btn">Все</button>
+            <button class="filter-btn active">Образование</button>
+            <button class="filter-btn">Экология</button>
+            <button class="filter-btn">Помощь детям</button>
+            <button class="filter-btn">Пожилым</button>
         </div>
+    </div>
 
-        <div id="map" class="map">
-            <div class="loading">Загрузка карты...</div>
-        </div>
+    <div id="map" class="map">
+        <div class="loading">Загрузка карты...</div>
+    </div>
 
-        <div class="ngo-card" id="ngoCard">
-            <span class="close-btn">&times;</span>
+    <div class="ngo-card" id="ngoCard">
+        <span class="close-btn">&times;</span>
+        <div class="card-content">
             <h3>Добросердие</h3>
             <p><strong>Категория:</strong> Помощь детям</p>
             <p><strong>Описание:</strong> Организация помогает детям из малообеспеченных семей.</p>
@@ -38,7 +39,8 @@
             <p><strong>Сайт:</strong> <a href="#">dobro.ru</a></p>
         </div>
     </div>
+</div>
 
-    <script src="script.js"></script>
+<script src="/static/script.js"></script>
 </body>
 </html>

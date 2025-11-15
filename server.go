@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -21,14 +23,49 @@ type Response struct {
 }
 
 func StartServer(address string, port string) error {
-	// Обработчик для главной страницы (отдаем HTML)
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "index.html")
+	// Обработчик для статических файлов (CSS, JS, изображения)
+	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
+		// Безопасное получение пути к файлу
+		filePath := strings.TrimPrefix(r.URL.Path, "/static/")
+		if filePath == "" {
+			http.NotFound(w, r)
+			return
+		}
+
+		// Запрещаем доступ к файлам вне текущей директории
+		if strings.Contains(filePath, "..") {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+
+		// Устанавливаем правильный Content-Type
+		ext := strings.ToLower(filepath.Ext(filePath))
+		switch ext {
+		case ".css":
+			w.Header().Set("Content-Type", "text/css")
+		case ".js":
+			w.Header().Set("Content-Type", "application/javascript")
+		case ".png":
+			w.Header().Set("Content-Type", "image/png")
+		case ".jpg", ".jpeg":
+			w.Header().Set("Content-Type", "image/jpeg")
+		case ".html":
+			w.Header().Set("Content-Type", "text/html")
+		default:
+			w.Header().Set("Content-Type", "text/plain")
+		}
+
+		http.ServeFile(w, r, filePath)
 	})
 
-	// Обработчик для CSS
-	http.HandleFunc("/main.css", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "main.css")
+	// Обработчик для главной страницы
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" {
+			http.ServeFile(w, r, "index.html")
+		} else {
+			// Для всех остальных путей пробуем найти файл в static
+			http.ServeFile(w, r, strings.TrimPrefix(r.URL.Path, "/"))
+		}
 	})
 
 	// Обработчик для получения сообщений (POST)
@@ -86,5 +123,6 @@ func StartServer(address string, port string) error {
 	})
 
 	log.Printf("🚀 Сервер запущен на http://%s:%s", address, port)
+	log.Printf("📁 Обслуживаются статические файлы из текущей директории")
 	return http.ListenAndServe(address+":"+port, nil)
 }
