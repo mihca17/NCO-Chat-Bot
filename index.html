@@ -3,247 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App - Красивый мессенджер</title>
-    <link rel="stylesheet" href="main.css">
+    <title>Карта добрых дел</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
-<div class="app-container">
-    <!-- Хедер -->
-    <header class="app-header">
-        <div class="header-content">
-            <h1 class="app-title">
-                <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24">
-                    <path fill="currentColor" d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2Z"/>
-                </svg>
-                Web Messenger
-            </h1>
-            <div class="server-status" id="serverStatus">
-                <span class="status-dot"></span>
-                Проверка соединения...
-            </div>
-        </div>
+    <header>
+        <img src="https://downloader.disk.yandex.ru/preview/4b2ad2bc4929efba90215b5ee5fe54104cd611aedab40729dd6f27aaa4cfb290/69189eaf/BG0FSwDtkbhILlrizEkEaZfFbrBCUX9dqehD2zddpFBtzRHkpa8obRk8YEB2OkQj70SCQ_cKH-vpJhoYPzTnJQ%3D%3D?uid=0&filename=LOGO_ROSATOM_rus_HOR_WHITE_PNG.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v3&size=1920x1152" alt="Логотип Росатома" class="logo">
+        <div class="title">Карта добрых дел</div>
     </header>
 
-    <!-- Основной контент -->
-    <main class="main-content">
-        <!-- Блок загрузки файлов -->
-        <section class="upload-section">
-            <div class="upload-card">
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-content">
-                        <svg class="upload-icon" viewBox="0 0 24 24" width="64" height="64">
-                            <path fill="currentColor" d="M14,13V17H10V13H7L12,8L17,13M19.35,10.03C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.03C2.34,8.36 0,10.9 0,14A6,6 0 0,0 6,20H19A5,5 0 0,0 24,15C24,12.36 21.95,10.22 19.35,10.03Z"/>
-                        </svg>
-                        <h3 class="upload-title">Загрузите файл</h3>
-                        <p class="upload-text">Перетащите сюда файл или нажмите для выбора</p>
-                        <span class="upload-hint">Поддерживаются: PDF, JPG, PNG, DOC</span>
-                    </div>
-                </div>
+    <div class="container">
+        <div class="controls">
+            <input type="text" class="search-box" placeholder="Поиск по названию НКО...">
+            <div class="filters">
+                <button class="filter-btn">Все</button>
+                <button class="filter-btn active">Образование</button>
+                <button class="filter-btn">Экология</button>
+                <button class="filter-btn">Помощь детям</button>
+                <button class="filter-btn">Пожилым</button>
             </div>
-        </section>
+        </div>
 
-        <!-- Блок ввода сообщения -->
-        <section class="message-section">
-            <div class="message-card">
-                <div class="input-container">
-                    <button class="action-button attach-button" title="Прикрепить файл">
-                        <svg viewBox="0 0 24 24" width="20" height="20">
-                            <path fill="currentColor" d="M16.5,6V17.5A4,4 0 0,1 12.5,21.5A4,4 0 0,1 8.5,17.5V5A2.5,2.5 0 0,1 11,2.5A2.5,2.5 0 0,1 13.5,5V15.5A1,1 0 0,1 12.5,16.5A1,1 0 0,1 11.5,15.5V6H10V15.5A2.5,2.5 0 0,0 12.5,18A2.5,2.5 0 0,0 15,15.5V5A4,4 0 0,0 11,1A4,4 0 0,0 7,5V17.5A5.5,5.5 0 0,0 12.5,23A5.5,5.5 0 0,0 18,17.5V6H16.5Z"/>
-                        </svg>
-                    </button>
+        <div id="map" class="map">
+            <div class="loading">Загрузка карты...</div>
+        </div>
 
-                    <textarea
-                            class="text-input"
-                            placeholder="Введите ваше сообщение..."
-                            id="textInput"
-                            rows="1"
-                    ></textarea>
+        <div class="ngo-card" id="ngoCard">
+            <span class="close-btn">&times;</span>
+            <h3>Добросердие</h3>
+            <p><strong>Категория:</strong> Помощь детям</p>
+            <p><strong>Описание:</strong> Организация помогает детям из малообеспеченных семей.</p>
+            <p><strong>Телефон:</strong> +7 (999) 123-45-67</p>
+            <p><strong>Сайт:</strong> <a href="#">dobro.ru</a></p>
+        </div>
+    </div>
 
-                    <button class="action-button send-button" onclick="sendMessage()" title="Отправить сообщение">
-                        <svg viewBox="0 0 24 24" width="20" height="20">
-                            <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Блок информации о сервере -->
-        <section class="info-section">
-            <div class="info-card">
-                <h3 class="info-title">Информация о сервере</h3>
-                <p class="info-description">Получите текущую информацию о состоянии сервера</p>
-
-                <div class="info-content" id="infoContent">
-                    <div class="info-placeholder">
-                        <svg class="info-icon" viewBox="0 0 24 24" width="48" height="48">
-                            <path fill="currentColor" d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
-                        </svg>
-                        <p>Нажмите кнопку ниже для получения информации</p>
-                    </div>
-                </div>
-
-                <button class="get-info-button" onclick="getServerInfo()">
-                    <svg class="refresh-icon" viewBox="0 0 24 24" width="16" height="16">
-                        <path fill="currentColor" d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
-                    </svg>
-                    Получить информацию
-                </button>
-            </div>
-        </section>
-    </main>
-</div>
-
-<script>
-    // Функция отправки сообщения
-    function sendMessage() {
-        const textInput = document.getElementById('textInput');
-        const text = textInput.value.trim();
-
-        if (text === '') {
-            showNotification('Введите текст сообщения!', 'error');
-            return;
-        }
-
-        // Показываем индикатор загрузки
-        const sendButton = document.querySelector('.send-button');
-        sendButton.innerHTML = '<div class="loading-spinner"></div>';
-        sendButton.disabled = true;
-
-        fetch('/send', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ text: text })
-        })
-            .then(response => response.json())
-            .then(data => {
-                showNotification('Сообщение успешно отправлено!', 'success');
-                textInput.value = '';
-                resetSendButton();
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                showNotification('Ошибка при отправке сообщения!', 'error');
-                resetSendButton();
-            });
-    }
-
-    // Функция получения информации о сервере
-    function getServerInfo() {
-        const button = document.querySelector('.get-info-button');
-        const infoContent = document.getElementById('infoContent');
-
-        // Показываем индикатор загрузки
-        button.innerHTML = '<div class="loading-spinner small"></div> Загрузка...';
-        button.disabled = true;
-
-        fetch('/api/info')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    displayServerInfo(data.data);
-                    showNotification('Информация успешно получена!', 'success');
-                }
-                resetInfoButton();
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                showNotification('Ошибка при получении информации!', 'error');
-                resetInfoButton();
-            });
-    }
-
-    // Функция отображения информации о сервере
-    function displayServerInfo(info) {
-        const infoContent = document.getElementById('infoContent');
-
-        infoContent.innerHTML = `
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-label">Время сервера:</span>
-                        <span class="info-value">${info.server_time}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Статус:</span>
-                        <span class="info-value status-badge">${info.status}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Запросов обработано:</span>
-                        <span class="info-value">${info.requests_count}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Время работы:</span>
-                        <span class="info-value">${info.server_uptime}</span>
-                    </div>
-                </div>
-                <div class="features-list">
-                    <h4>Возможности:</h4>
-                    <ul>
-                        ${info.features.map(feature => `<li>${feature}</li>`).join('')}
-                    </ul>
-                </div>
-            `;
-    }
-
-    // Вспомогательные функции
-    function resetSendButton() {
-        const sendButton = document.querySelector('.send-button');
-        sendButton.innerHTML = `
-                <svg viewBox="0 0 24 24" width="20" height="20">
-                    <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
-                </svg>
-            `;
-        sendButton.disabled = false;
-    }
-
-    function resetInfoButton() {
-        const button = document.querySelector('.get-info-button');
-        button.innerHTML = `
-                <svg class="refresh-icon" viewBox="0 0 24 24" width="16" height="16">
-                    <path fill="currentColor" d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
-                </svg>
-                Получить информацию
-            `;
-        button.disabled = false;
-    }
-
-    function showNotification(message, type) {
-        // Создаем уведомление
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-
-        document.body.appendChild(notification);
-
-        // Удаляем уведомление через 3 секунды
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
-    }
-
-    // Автоматическое изменение высоты textarea
-    document.getElementById('textInput').addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-    });
-
-    // Отправка по Ctrl+Enter
-    document.getElementById('textInput').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && e.ctrlKey) {
-            e.preventDefault();
-            sendMessage();
-        }
-    });
-
-    // Проверка статуса сервера при загрузке
-    window.addEventListener('load', function() {
-        setTimeout(() => {
-            const statusElement = document.getElementById('serverStatus');
-            statusElement.innerHTML = '<span class="status-dot online"></span>Сервер онлайн';
-        }, 1000);
-    });
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
