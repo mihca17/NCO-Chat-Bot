@@ -3,113 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Интерактивная карта России</title>
-    
-    <!-- Подключаем стили Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <style>
-        /* Задаем высоту для контейнера карты */
-        #map {
-            height: 600px;
-            width: 100%;
-            border: 2px solid #333;
-            border-radius: 8px;
-        }
-        
-        /* Стили для заголовка и подсказок */
-        .header {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            color: #333;
-        }
-        
-        .info {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            color: #666;
-            margin-bottom: 20px;
-        }
-    </style>
+    <title>Города-миллионники России</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>Интерактивная карта России</h1>
-        <p class="info">⭐ Кликните на маркер, чтобы узнать больше о городе</p>
-    </div>
-    
-    <!-- Контейнер, в котором будет отображаться карта -->
-    <div id="map"></div>
-    
-    <!-- Подключаем JavaScript библиотеки -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // Инициализация карты с центром на России и приближением
-        const map = L.map('map').setView([65, 90], 3); // Широта, долгота, уровень зума
-        
-        // Добавляем слой карты (используем OpenStreetMap)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-        
-        // Массив с данными о городах (название, координаты, описание)
-        const cities = [
-            {
-                name: "Москва",
-                coords: [55.7558, 37.6173],
-                description: "Столица России, крупнейший город страны."
-            },
-            {
-                name: "Санкт-Петербург", 
-                coords: [59.9343, 30.3351],
-                description: "Северная столица, культурный центр России."
-            },
-            {
-                name: "Екатеринбург",
-                coords: [56.8389, 60.6057],
-                description: "Крупный город на Урале, столица Уральского региона."
-            },
-            {
-                name: "Владивосток",
-                coords: [43.1155, 131.8855],
-                description: "Крупнейший порт Дальнего Востока России."
-            },
-            {
-                name: "Калининград",
-                coords: [54.7104, 20.4522],
-                description: "Самая западная точка России, город с богатой историей."
-            },
-            {
-                name: "Саратов",
-                coords: [51.5924, 45.9608],
-                description: "Город на Волге, входящий в состав Приволжского федерального округа."
-            }
-        ];
-        
-        // Функция для добавления маркеров на карту
-        cities.forEach(city => {
-            // Создаем маркер для каждого города
-            const marker = L.marker(city.coords).addTo(map);
+    <div class="wrapper">
+        <div class="sidebar">
+            <h1>INFO</h1>
+        </div>
+        <div class="main-content">
+            <h1 class="title">🏙️ Города-миллионники России</h1>
+            <p class="subtitle">Интерактивная карта крупнейших городов страны</p>
             
-            // Привязываем всплывающее окно (popup) к маркеру
-            marker.bindPopup(`
-                <div style="text-align: center;">
-                    <h3>${city.name}</h3>
-                    <p>${city.description}</p>
-                    <small>Координаты: ${city.coords[0].toFixed(4)}, ${city.coords[1].toFixed(4)}</small>
+            <div class="map-container">
+                <div id="map" class="map">
+                    <div class="loading">Загрузка карты...</div>
                 </div>
-            `);
-        });
-        
-        // Добавляем простой круг для примера другого типа слоя
-        const circle = L.circle([55.7558, 37.6173], {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.1,
-            radius: 500000 // в метрах
-        }).addTo(map);
-        
-        circle.bindPopup("Это область вокруг Москвы радиусом 500 км.");
-    </script>
+            </div>
+            
+            <div class="stats" id="stats">
+                Всего городов-миллионников: 16
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color"></div>
+                    <span>Города с населением более 1 миллиона человек</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
