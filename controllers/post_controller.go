@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"NCO-Chat-Bot/logger"
 	"NCO-Chat-Bot/models"
 	"NCO-Chat-Bot/services"
 	"encoding/json"
@@ -10,19 +11,21 @@ import (
 
 // PostController - контроллер для POST запросов (создание данных)
 type PostController struct {
-	ps *services.PostService
+	ps     *services.PostService
+	logger *logger.Logger
 }
 
-func NewPostController(ps *services.PostService) *PostController {
+func NewPostController(ps *services.PostService, logger *logger.Logger) *PostController {
 	return &PostController{
-		ps: ps,
+		ps:     ps,
+		logger: logger,
 	}
 }
 
 // ================== HTTP HANDLERS ==================
 
 // CreateNCO - обработчик POST запроса для создания новой НКО
-func (c *PostController) CreateNCO(w http.ResponseWriter, r *http.Request) {
+func (c *PostController) SaveNCO(w http.ResponseWriter, r *http.Request) {
 	// Проверяем метод запроса
 	if r.Method != http.MethodPost {
 		c.ps.WriteJSON(w, http.StatusMethodNotAllowed, &models.Response{
@@ -59,13 +62,14 @@ func (c *PostController) CreateNCO(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("🔄 POST обработчик: получен запрос на создание НКО - %s\n", ncoRequest.Name)
+	c.logger.Info("POST обработчик: получен запрос на создание НКО - " + ncoRequest.Name)
 
 	// Вызываем бизнес-логику
 	response := c.ps.SaveNCO(ncoRequest)
 
 	// Отправляем ответ
 	if response.Status == "error" {
+		c.logger.Error(response.Error, nil)
 		c.ps.WriteJSON(w, http.StatusInternalServerError, response)
 	} else {
 		c.ps.WriteJSON(w, http.StatusCreated, response)

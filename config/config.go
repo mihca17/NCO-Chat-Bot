@@ -1,7 +1,6 @@
 package config
 
 type Config struct {
-	BotToken        string
 	DBType          string `yaml:"db_type"`
 	DBPath          string `yaml:"db_path"`
 	NCO_DBTableName string `yaml:"db_table_name"`

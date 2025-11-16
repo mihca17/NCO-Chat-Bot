@@ -2,6 +2,7 @@ package services
 
 import (
 	"NCO-Chat-Bot/database/repository"
+	"NCO-Chat-Bot/logger"
 	"NCO-Chat-Bot/models"
 	"encoding/json"
 	"fmt"
@@ -10,18 +11,20 @@ import (
 
 // PostService - сервис для операций создания
 type PostService struct {
-	repo *repository.SQLiteRepository
+	repo   *repository.SQLiteRepository
+	logger *logger.Logger
 }
 
-func NewPostService(repo *repository.SQLiteRepository) *PostService {
+func NewPostService(repo *repository.SQLiteRepository, logger *logger.Logger) *PostService {
 	return &PostService{
-		repo: repo,
+		repo:   repo,
+		logger: logger,
 	}
 }
 
 // CreateNCO - бизнес-логика создания новой НКО
 func (s *PostService) SaveNCO(req models.NCO) *models.Response {
-	fmt.Printf("🎯 PostService: создание НКО - %s\n", req.Name)
+	s.logger.Info("🎯 PostService: создание НКО - " + req.Name)
 
 	// Создаем модель NCO из запроса
 	nco := models.NCO{
@@ -44,7 +47,7 @@ func (s *PostService) SaveNCO(req models.NCO) *models.Response {
 		}
 	}
 
-	fmt.Printf("✅ PostService: НКО создана")
+	s.logger.Success("PostService: НКО создана")
 
 	return &models.Response{
 		Status:  "success",

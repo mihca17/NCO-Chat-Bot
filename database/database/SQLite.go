@@ -7,7 +7,8 @@ import (
 )
 
 type SQLiteDB struct {
-	db *sql.DB
+	db     *sql.DB
+	logger *logger.Logger
 }
 
 var (
@@ -16,7 +17,7 @@ var (
 	sqliteInitError error
 )
 
-func InitSQLite(dbPath string) (*SQLiteDB, error) {
+func InitSQLite(dbPath string, logger *logger.Logger) (*SQLiteDB, error) {
 	sqliteOnce.Do(func() {
 		logger.Info("Инициализация SQLite: " + dbPath)
 
@@ -39,9 +40,14 @@ func InitSQLite(dbPath string) (*SQLiteDB, error) {
 			sqliteInitError = err
 			logger.Error("Ошибка создания таблицы БД", err)
 			return
+		} else {
+			logger.Success("Таблицы базы данных созданы/проверены")
 		}
 
-		sqliteInstance = &SQLiteDB{db: db}
+		sqliteInstance = &SQLiteDB{
+			db:     db,
+			logger: logger,
+		}
 		logger.Success("SQLite инициализирован: " + dbPath)
 	})
 
@@ -68,7 +74,6 @@ func createTables(db *sql.DB) error {
 		return err
 	}
 
-	logger.Success("Таблицы базы данных созданы/проверены")
 	return err
 }
 
@@ -76,7 +81,7 @@ func (s *SQLiteDB) Close() error {
 	if s.db != nil {
 		err := s.db.Close()
 		s.db = nil
-		logger.Info("Соединение с SQLite закрыто")
+		s.logger.Info("Соединение с SQLite закрыто")
 		return err
 	}
 	return nil

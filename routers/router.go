@@ -2,7 +2,7 @@ package routers
 
 import (
 	"NCO-Chat-Bot/controllers"
-	"log"
+	"NCO-Chat-Bot/logger"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -14,16 +14,27 @@ type Server struct {
 	router  *http.ServeMux
 	gc      *controllers.GetController
 	pc      *controllers.PostController
+	logger  *logger.Logger
 }
 
-func NewServer(address, port string, gc *controllers.GetController, pc *controllers.PostController) *Server {
+func NewServer(address, port string, gc *controllers.GetController, pc *controllers.PostController, logger *logger.Logger) *Server {
 	return &Server{
 		address: address,
 		port:    port,
 		router:  http.NewServeMux(),
 		gc:      gc,
 		pc:      pc,
+		logger:  logger,
 	}
+}
+
+func (s *Server) Start() error {
+	s.setupRoutes()
+
+	s.logger.Success("🚀 Сервер запущен на http://" + s.address + ":" + s.port)
+	s.logger.Success("📁 Обслуживаются статические файлы из директории static/")
+
+	return http.ListenAndServe(s.address+":"+s.port, s.router)
 }
 
 func (s *Server) setupRoutes() {
@@ -34,7 +45,7 @@ func (s *Server) setupRoutes() {
 	s.router.HandleFunc("GET /api/nco/all", s.gc.GetAllNCOs)
 
 	// POST маршруты
-	s.router.HandleFunc("POST /api/nco", s.pc.CreateNCO)
+	s.router.HandleFunc("POST /api/nco", s.pc.SaveNCO)
 
 	// Статические файлы
 	s.router.HandleFunc("/static/", s.staticHandler)
@@ -78,13 +89,4 @@ func (s *Server) homeHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.NotFound(w, r)
 	}
-}
-
-func (s *Server) Start() error {
-	s.setupRoutes()
-
-	log.Printf("🚀 Сервер запущен на http://%s:%s", s.address, s.port)
-	log.Printf("📁 Обслуживаются статические файлы из директории static/")
-
-	return http.ListenAndServe(s.address+":"+s.port, s.router)
 }

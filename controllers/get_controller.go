@@ -1,21 +1,23 @@
 package controllers
 
 import (
+	"NCO-Chat-Bot/logger"
 	"NCO-Chat-Bot/models"
 	"NCO-Chat-Bot/services"
-	"fmt"
 	"net/http"
 	"strconv"
 )
 
 // NCOController - объединенный контроллер и обработчик для НКО
 type GetController struct {
-	g *services.GetService
+	g      *services.GetService
+	logger *logger.Logger
 }
 
-func NewGetController(g *services.GetService) *GetController {
+func NewGetController(g *services.GetService, logger *logger.Logger) *GetController {
 	return &GetController{
-		g: g,
+		g:      g,
+		logger: logger,
 	}
 }
 
@@ -53,7 +55,7 @@ func (c *GetController) GetNCOByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("🔄 Обработчик: получен GET запрос с id=%s\n", id)
+	c.logger.Info("GET Обработчик: получен GET запрос с id=" + strconv.FormatInt(id, 10))
 
 	// Вызываем бизнес-логику
 	response := c.g.GetNCOByID(id)
@@ -92,7 +94,7 @@ func (c *GetController) GetNCOByID(w http.ResponseWriter, r *http.Request) {
 
 // GetAllNCOs - обработчик GET запроса для получения всех НКО
 func (c *GetController) GetAllNCOs(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("🔄 Обработчик: получен GET запрос на все НКО\n")
+	c.logger.Info("GET Обработчик: получен GET запрос на все НКО")
 
 	// Вызываем бизнес-логику
 	response := c.g.GetAllNCOs()

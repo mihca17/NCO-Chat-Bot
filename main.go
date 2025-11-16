@@ -16,13 +16,14 @@ import (
 func main() {
 	config := config.DefaultConfig()
 
-	err := logger.Init(config.LogFile)
+	logger, err := logger.Init(config.LogFile)
+
 	if err != nil {
 		log.Fatalf("Не удалось инициализировать логгер: %v", err)
 	}
 	defer logger.Close()
 
-	db, err := database.InitSQLite(config.DBPath)
+	db, err := database.InitSQLite(config.DBPath, logger)
 	if err != nil {
 		logger.Fatal("Ошибка инициализации БД", err)
 	}
@@ -30,15 +31,16 @@ func main() {
 
 	repo := repository.NewSQLiteRepository(db.GetDB(), &config)
 
-	getService := services.NewGetService(repo)
-	getController := controllers.NewGetController(getService)
+	getService := services.NewGetService(repo, logger)
+	getController := controllers.NewGetController(getService, logger)
 
-	postService := services.NewPostService(repo)
-	postController := controllers.NewPostController(postService)
+	postService := services.NewPostService(repo, logger)
+	postController := controllers.NewPostController(postService, logger)
 
-	srv := routers.NewServer(config.Address, config.Port, getController, postController)
+	srv := routers.NewServer(config.Address, config.Port, getController, postController, logger)
 	err = srv.Start()
 	if err != nil {
+		logger.Fatal("Ошибка запуска сервера", err)
 		panic(err)
 	}
 }

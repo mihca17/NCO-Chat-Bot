@@ -2,19 +2,22 @@ package services
 
 import (
 	"NCO-Chat-Bot/database/repository"
+	"NCO-Chat-Bot/logger"
 	"NCO-Chat-Bot/models"
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"strconv"
 )
 
 type GetService struct {
-	repo *repository.SQLiteRepository
+	repo   *repository.SQLiteRepository
+	logger *logger.Logger
 }
 
-func NewGetService(repo *repository.SQLiteRepository) *GetService {
+func NewGetService(repo *repository.SQLiteRepository, logger *logger.Logger) *GetService {
 	return &GetService{
-		repo: repo,
+		repo:   repo,
+		logger: logger,
 	}
 }
 
@@ -22,7 +25,7 @@ func NewGetService(repo *repository.SQLiteRepository) *GetService {
 
 // Получение НКО по ID
 func (g *GetService) GetNCOByID(id int64) *models.Response {
-	fmt.Printf("🎯 Контроллер: получен запрос на НКО с ID: %s\n", id)
+	g.logger.Info("Контроллер: получен запрос на НКО с ID: " + strconv.FormatInt(id, 10))
 
 	nco, err := g.repo.GetByID(id)
 	if err != nil {
@@ -32,7 +35,7 @@ func (g *GetService) GetNCOByID(id int64) *models.Response {
 		}
 	}
 
-	fmt.Printf("✅ Контроллер: найдена НКО - %s\n", nco.Name)
+	g.logger.Info("Контроллер: найдена НКО - " + nco.Name)
 
 	return &models.Response{
 		Status: "success",
@@ -62,7 +65,7 @@ func (g *GetService) GetNCOByID(id int64) *models.Response {
 
 // Получение всех НКО
 func (g *GetService) GetAllNCOs() *models.Response {
-	fmt.Printf("🎯 Контроллер: получен запрос на все НКО\n")
+	g.logger.Info("Контроллер: получен запрос на все НКО")
 
 	ncos, err := g.repo.GetAll()
 	if err != nil {
@@ -72,7 +75,7 @@ func (g *GetService) GetAllNCOs() *models.Response {
 		}
 	}
 
-	fmt.Printf("🎯 Контроллер: найдено %d НКО\n", len(ncos))
+	g.logger.Info("Контроллер: найдено " + strconv.FormatInt(int64(len(ncos)), 10) + " НКО")
 
 	return &models.Response{
 		Status: "success",
