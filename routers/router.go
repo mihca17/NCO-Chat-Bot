@@ -8,6 +8,23 @@ import (
 	"strings"
 )
 
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Устанавливаем CORS headers
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
+
+		// Если это OPTIONS запрос (preflight), сразу отвечаем
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 type Server struct {
 	address string
 	port    string
@@ -34,12 +51,10 @@ func (s *Server) Start() error {
 	s.logger.Success("🚀 Сервер запущен на http://" + s.address + ":" + s.port)
 	s.logger.Success("📁 Обслуживаются статические файлы из директории static/")
 
-	return http.ListenAndServe(s.address+":"+s.port, s.router)
+	return http.ListenAndServe(s.address+":"+s.port, corsMiddleware(s.router))
 }
 
 func (s *Server) setupRoutes() {
-	// Инициализируем обработчики
-
 	// GET маршруты
 	s.router.HandleFunc("GET /api/nco", s.gc.GetNCOByID)
 	s.router.HandleFunc("GET /api/nco/all", s.gc.GetAllNCOs)
@@ -53,6 +68,8 @@ func (s *Server) setupRoutes() {
 }
 
 func (s *Server) staticHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	filePath := strings.TrimPrefix(r.URL.Path, "/static/")
 	if filePath == "" {
 		http.NotFound(w, r)
@@ -84,6 +101,8 @@ func (s *Server) staticHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) homeHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	if r.URL.Path == "/" {
 		http.ServeFile(w, r, "index.html")
 	} else {
