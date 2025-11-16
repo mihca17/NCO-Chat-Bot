@@ -60,7 +60,8 @@ func createTables(db *sql.DB) error {
 			name TEXT,
 			category TEXT,
 			description TEXT,
-			contacts TEXT
+			contacts TEXT,
+			status TEXT DEFAULT 'Under Consideration'
         )
     `)
 	if err != nil {

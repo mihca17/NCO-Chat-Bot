@@ -74,7 +74,7 @@ func (s *Server) staticHandler(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) homeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
-		http.ServeFile(w, r, "static/index.html")
+		http.ServeFile(w, r, "index.html")
 	} else {
 		http.NotFound(w, r)
 	}

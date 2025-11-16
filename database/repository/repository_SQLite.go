@@ -37,7 +37,7 @@ func (r *SQLiteRepository) GetByID(ID int64) (*models.NCO, error) {
 
 	err := r.db.QueryRow(`
         SELECT x, y, city, region, name, category, description, contacts
-        FROM nco WHERE id = ?
+        FROM nco WHERE id = ? and status = 'Accepted'
     `, ID).Scan(&nco.X, &nco.Y, &nco.City, &nco.Region, &nco.Name, &nco.Category, &nco.Description, &nco.Contacts)
 
 	if err != nil {
@@ -53,7 +53,7 @@ func (r *SQLiteRepository) GetByID(ID int64) (*models.NCO, error) {
 func (r *SQLiteRepository) GetAll() ([]*models.NCOSimple, error) {
 	var ncos []*models.NCOSimple
 
-	rows, err := r.db.Query("SELECT id, x, y, name FROM nco")
+	rows, err := r.db.Query("SELECT id, x, y, name FROM nco WHERE status = 'Accepted'")
 	if err != nil {
 		return nil, err
 	}

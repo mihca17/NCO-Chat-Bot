@@ -1,7 +1,6 @@
 package models
 
 type NCO struct {
-	ID          int64
 	X           float64
 	Y           float64
 	City        string
