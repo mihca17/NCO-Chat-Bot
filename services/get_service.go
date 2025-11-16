@@ -21,8 +21,6 @@ func NewGetService(repo *repository.SQLiteRepository, logger *logger.Logger) *Ge
 	}
 }
 
-// ================== BUSINESS LOGIC ==================
-
 // Получение НКО по ID
 func (g *GetService) GetNCOByID(id int64) *models.Response {
 	g.logger.Info("Контроллер: получен запрос на НКО с ID: " + strconv.FormatInt(id, 10))
@@ -45,7 +43,7 @@ func (g *GetService) GetNCOByID(id int64) *models.Response {
 
 // Получение НКО по городу
 //func (g *GetService) getNCOsByCity(city string) *models.Response {
-//	fmt.Printf("🎯 Контроллер: получен запрос на НКО в городе: %s\n", city)
+//	fmt.Printf("Контроллер: получен запрос на НКО в городе: %s\n", city)
 //
 //	ncos, err := g.repo.FindByCity(city)
 //	if err != nil {
@@ -55,7 +53,7 @@ func (g *GetService) GetNCOByID(id int64) *models.Response {
 //		}
 //	}
 //
-//	fmt.Printf("✅ Контроллер: найдено %d НКО в городе %s\n", len(ncos), city)
+//	fmt.Printf("Контроллер: найдено %d НКО в городе %s\n", len(ncos), city)
 //
 //	return &models.Response{
 //		Status: "success",
@@ -82,8 +80,6 @@ func (g *GetService) GetAllNCOs() *models.Response {
 		Data:   ncos,
 	}
 }
-
-// ================== HELPER METHODS ==================
 
 // Вспомогательная функция для отправки JSON ответа
 func (g *GetService) WriteJSON(w http.ResponseWriter, statusCode int, response *models.Response) {

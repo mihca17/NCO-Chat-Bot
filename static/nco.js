@@ -19,7 +19,7 @@ function initMap() {
         createPlacemark(coords);
     });
 
-    // Загрузка существующих организаций (если нужно)
+    // Загрузка существующих организаций
     loadExistingOrganizations();
 }
 
@@ -66,7 +66,6 @@ function createPlacemark(coords) {
 }
 
 function loadExistingOrganizations() {
-    // Здесь можно загрузить существующие организации с сервера
     // Пока оставляем пустым для демонстрации
 }
 

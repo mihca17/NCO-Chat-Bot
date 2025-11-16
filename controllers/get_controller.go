@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-// NCOController - объединенный контроллер и обработчик для НКО
+// NCOController - контроллер
 type GetController struct {
 	g      *services.GetService
 	logger *logger.Logger
@@ -20,8 +20,6 @@ func NewGetController(g *services.GetService, logger *logger.Logger) *GetControl
 		logger: logger,
 	}
 }
-
-// ================== HTTP HANDLERS ==================
 
 // GetNCOByID - обработчик GET запроса для получения НКО по ID
 func (c *GetController) GetNCOByID(w http.ResponseWriter, r *http.Request) {

@@ -22,8 +22,6 @@ func NewPostController(ps *services.PostService, logger *logger.Logger) *PostCon
 	}
 }
 
-// ================== HTTP HANDLERS ==================
-
 // CreateNCO - обработчик POST запроса для создания новой НКО
 func (c *PostController) SaveNCO(w http.ResponseWriter, r *http.Request) {
 	// Проверяем метод запроса
@@ -75,8 +73,6 @@ func (c *PostController) SaveNCO(w http.ResponseWriter, r *http.Request) {
 		c.ps.WriteJSON(w, http.StatusCreated, response)
 	}
 }
-
-// ================== VALIDATION ==================
 
 // validateNCORequest - валидация данных НКО
 func (c *PostController) validateNCORequest(req models.NCO) *models.Response {

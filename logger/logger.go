@@ -7,14 +7,6 @@ import (
 	"sync"
 )
 
-//var (
-//	successLogger *log.Logger
-//	errorLogger   *log.Logger
-//	infoLogger    *log.Logger
-//	logFile       *os.File
-//	once          sync.Once
-//)
-
 type Logger struct {
 	successLogger *log.Logger
 	errorLogger   *log.Logger
