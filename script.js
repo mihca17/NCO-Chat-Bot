@@ -429,8 +429,7 @@ async function fetchDataFromServer(id) {
 // Инициализация обработчиков событий
 document.addEventListener('DOMContentLoaded', function() {
     // Назначение обработчиков для фильтров
-    document.getElementById('applyFilters').addEventListener('click', applyFilters);
-    document.getElementById('resetFilters').addEventListener('click', resetFilters);
+
     
     // Автоприменение фильтров при изменении селектов
     document.getElementById('activityFilter').addEventListener('change', applyFilters);

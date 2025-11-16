@@ -4,19 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Карта добрых дел</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
-<header>
-    <img src="https://downloader.disk.yandex.ru/preview/4b2ad2bc4929efba90215b5ee5fe54104cd611aedab40729dd6f27aaa4cfb290/69189eaf/BG0FSwDtkbhILlrizEkEaZfFbrBCUX9dqehD2zddpFBtzRHkpa8obRk8YEB2OkQj70SCQ_cKH-vpJhoYPzTnJQ%3D%3D?uid=0&filename=LOGO_ROSATOM_rus_HOR_WHITE_PNG.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v3&size=1920x1152" alt="Логотип Росатома" class="logo">
-    <div class="title">Карта добрых дел</div>
-</header>
+    <header>
+        <div class="left-header">
+            <img src="https://downloader.disk.yandex.ru/preview/4b2ad2bc4929efba90215b5ee5fe54104cd611aedab40729dd6f27aaa4cfb290/69189eaf/BG0FSwDtkbhILlrizEkEaZfFbrBCUX9dqehD2zddpFBtzRHkpa8obRk8YEB2OkQj70SCQ_cKH-vpJhoYPzTnJQ%3D%3D?uid=0&filename=LOGO_ROSATOM_rus_HOR_WHITE_PNG.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v3&size=1920x1152" alt="Логотип Росатома" class="logo">
+            <div class="title">Карта добрых дел</div></div>
+        <div class="right-header">
+            <button class="btn" id="add-NCO">Добавить организацию</button>
+        </div>
+    </header>
 
-<div class="container">
+    <div class="container">
         <div class="controls">
-            <input type="text" class="search-box" placeholder="Поиск по названию НКО...">
-            <div class="filters">
+            <div class="block">
+                <label class="string">Укажите, какие организации хотите видеть на карте</label>
+            </div>
+            <div class="filters block">
                 <div class="filter-group">
                     <label for="activityFilter">Тип деятельности:</label>
                     <select id="activityFilter">
@@ -37,14 +43,11 @@
                         <option value="">Все организации</option>
                     </select>
                 </div>
-                <div>
-                    <button id="applyFilters">Применить фильтры</button>
-                    <button id="resetFilters">Сбросить</button>
-                </div>
+                
             </div>
-            <div class="information">
+            <div class="information block">
                 <div class="about">
-                    <h3 id="info">Организация помогает детям из мало обеспеченных семей.</h3>
+                    <p id="info"><strong>Подсказка: </strong>Здесь появится подробная информация об организациях. Просто выберите метку на карте, которая вас интересует. <Strong>В зависимости от фильтров</Strong> на карте будут отображаться только те организации, которые соответсвуют выбранным критериям</p>
                 </div>
             </div>
             
@@ -64,6 +67,6 @@
         </div>
     </div>
 
-<script src="/static/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
