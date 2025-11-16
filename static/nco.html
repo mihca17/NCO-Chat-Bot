@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавление НКО - Карта добрых дел</title>
+    <link rel="stylesheet" href="nco.css">
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+</head>
+<body>
+    <header>
+        <img src="https://downloader.disk.yandex.ru/preview/4b2ad2bc4929efba90215b5ee5fe54104cd611aedab40729dd6f27aaa4cfb290/69189eaf/BG0FSwDtkbhILlrizEkEaZfFbrBCUX9dqehD2zddpFBtzRHkpa8obRk8YEB2OkQj70SCQ_cKH-vpJhoYPzTnJQ%3D%3D?uid=0&filename=LOGO_ROSATOM_rus_HOR_WHITE_PNG.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v3&size=1920x1152" alt="Логотип Росатома" class="logo">
+        <div class="title">Добавление новой организации</div>
+        <a href="index.html" class="btn btn--outline">Назад к карте</a>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <div class="form-section">
+                <h2>Добавить новую организацию</h2>
+                
+                <form id="ncoForm" class="nco-form">
+                    <div class="form-group">
+                        <label for="orgName">Название организации *</label>
+                        <input type="text" id="orgName" name="orgName" required 
+                               placeholder="Например: Благотворительный фонд Помощь">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="category">Категория *</label>
+                            <select id="category" name="category" required>
+                                <option value="">Выберите категорию</option>
+                                <option value="Образование">Образование</option>
+                                <option value="Социальная защита">Социальная защита</option>
+                                <option value="Местное сообщество">Местное сообщество</option>
+                                <option value="Экология">Экология</option>
+                                <option value="Здоровье и спорт">Здоровье и спорт</option>
+                                <option value="Защита животных">Защита животных</option>
+                                <option value="Другое">Другое</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">Город *</label>
+                            <input type="text" id="city" name="city" required 
+                                   placeholder="Например: Москва">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="region">Регион *</label>
+                            <input type="text" id="region" name="region" required 
+                                   placeholder="Например: Московская область">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contacts">Контакты</label>
+                            <input type="text" id="contacts" name="contacts" 
+                                   placeholder="Телефон, email или ссылка">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Описание организации *</label>
+                        <textarea id="description" name="description" required 
+                                  placeholder="Опишите деятельность организации, целевую аудиторию, планы мероприятий..."
+                                  rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Координаты на карте *</label>
+                        <div class="coordinates-info">
+                            <span id="coordinatesDisplay">Кликните на карте для выбора местоположения</span>
+                            <button type="button" id="clearCoordinates" class="btn btn--secondary btn--small">
+                                Очистить
+                            </button>
+                        </div>
+                        <input type="hidden" id="coordX" name="coordX" required>
+                        <input type="hidden" id="coordY" name="coordY" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="cancelBtn" class="btn btn--secondary">Отмена</button>
+                        <button type="submit" id="submitBtn" class="btn btn--primary" disabled>
+                            Добавить организацию
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="instructions">
+                <h3>Инструкция:</h3>
+                <ol>
+                    <li>Заполните информацию об организации</li>
+                    <li>Кликните на карте для выбора местоположения</li>
+                    <li>Нажмите "Добавить организацию"</li>
+                </ol>
+            </div>
+        </div>
+
+        <div id="map" class="map">
+            <div class="map-overlay">
+                <div class="map-hint">Кликните на карте для выбора местоположения организации</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Организация успешно добавлена!</h3>
+            <p>Новая метка была размещена на карте.</p>
+            <div class="modal-actions">
+                <button id="addAnother" class="btn btn--primary">Добавить еще</button>
+                <button id="goToMap" class="btn btn--outline">На карту</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="nco.js"></script>
+</body>
+</html>
