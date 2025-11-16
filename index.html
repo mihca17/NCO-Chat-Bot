@@ -14,24 +14,48 @@
 </header>
 
 <div class="container">
-    <div class="controls">
-        <input type="text" class="search-box" placeholder="Поиск по названию НКО...">
-        <div class="filters">
-            <button class="filter-btn">Все</button>
-            <button class="filter-btn active">Образование</button>
-            <button class="filter-btn">Экология</button>
-            <button class="filter-btn">Помощь детям</button>
-            <button class="filter-btn">Пожилым</button>
+        <div class="controls">
+            <input type="text" class="search-box" placeholder="Поиск по названию НКО...">
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="activityFilter">Тип деятельности:</label>
+                    <select id="activityFilter">
+                        <option value="">Все типы</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="cityFilter">Город:</label>
+                    <select id="cityFilter">
+                        <option value="">Все города</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="nameFilter">Название организации:</label>
+                    <select id="nameFilter">
+                        <option value="">Все организации</option>
+                    </select>
+                </div>
+                <div>
+                    <button id="applyFilters">Применить фильтры</button>
+                    <button id="resetFilters">Сбросить</button>
+                </div>
+            </div>
+            <div class="information">
+                <div class="about">
+                    <h3 id="info">Организация помогает детям из мало обеспеченных семей.</h3>
+                </div>
+            </div>
+            
         </div>
-    </div>
 
-    <div id="map" class="map">
-        <div class="loading">Загрузка карты...</div>
-    </div>
+        <div id="map" class="map">
+            <div class="loading">Загрузка карты...</div>
+        </div>
 
-    <div class="ngo-card" id="ngoCard">
-        <span class="close-btn">&times;</span>
-        <div class="card-content">
+        <div class="ngo-card" id="ngoCard">
+            <span class="close-btn">&times;</span>
             <h3>Добросердие</h3>
             <p><strong>Категория:</strong> Помощь детям</p>
             <p><strong>Описание:</strong> Организация помогает детям из малообеспеченных семей.</p>
@@ -39,7 +63,6 @@
             <p><strong>Сайт:</strong> <a href="#">dobro.ru</a></p>
         </div>
     </div>
-</div>
 
 <script src="/static/script.js"></script>
 </body>
