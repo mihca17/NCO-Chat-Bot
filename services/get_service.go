@@ -1,0 +1,90 @@
+package services
+
+import (
+	"NCO-Chat-Bot/database/repository"
+	"NCO-Chat-Bot/models"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+type GetService struct {
+	repo *repository.SQLiteRepository
+}
+
+func NewGetService(repo *repository.SQLiteRepository) *GetService {
+	return &GetService{
+		repo: repo,
+	}
+}
+
+// ================== BUSINESS LOGIC ==================
+
+// Получение НКО по ID
+func (g *GetService) GetNCOByID(id int64) *models.Response {
+	fmt.Printf("🎯 Контроллер: получен запрос на НКО с ID: %s\n", id)
+
+	nco, err := g.repo.GetByID(id)
+	if err != nil {
+		return &models.Response{
+			Status: "error",
+			Error:  err.Error(),
+		}
+	}
+
+	fmt.Printf("✅ Контроллер: найдена НКО - %s\n", nco.Name)
+
+	return &models.Response{
+		Status: "success",
+		Data:   nco,
+	}
+}
+
+// Получение НКО по городу
+//func (g *GetService) getNCOsByCity(city string) *models.Response {
+//	fmt.Printf("🎯 Контроллер: получен запрос на НКО в городе: %s\n", city)
+//
+//	ncos, err := g.repo.FindByCity(city)
+//	if err != nil {
+//		return &models.Response{
+//			Status: "error",
+//			Error:  err.Error(),
+//		}
+//	}
+//
+//	fmt.Printf("✅ Контроллер: найдено %d НКО в городе %s\n", len(ncos), city)
+//
+//	return &models.Response{
+//		Status: "success",
+//		Data:   ncos,
+//	}
+//}
+
+// Получение всех НКО
+func (g *GetService) GetAllNCOs() *models.Response {
+	fmt.Printf("🎯 Контроллер: получен запрос на все НКО\n")
+
+	ncos, err := g.repo.GetAll()
+	if err != nil {
+		return &models.Response{
+			Status: "error",
+			Error:  err.Error(),
+		}
+	}
+
+	fmt.Printf("🎯 Контроллер: найдено %d НКО\n", len(ncos))
+
+	return &models.Response{
+		Status: "success",
+		Data:   ncos,
+	}
+}
+
+// ================== HELPER METHODS ==================
+
+// Вспомогательная функция для отправки JSON ответа
+func (g *GetService) WriteJSON(w http.ResponseWriter, statusCode int, response *models.Response) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(response)
+}

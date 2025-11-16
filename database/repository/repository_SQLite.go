@@ -26,9 +26,9 @@ func NewSQLiteRepository(db *sql.DB, config *config.Config) *SQLiteRepository {
 // База данных функции
 func (r *SQLiteRepository) SaveNCO(nco *models.NCO) error {
 	_, err := r.db.Exec(`
-        INSERT OR REPLACE INTO nco (x, y, name, owner)
-        VALUES (?, ?, ?, ?)
-    `, nco.X, nco.Y, nco.Name, nco.Owner)
+        INSERT OR REPLACE INTO nco (x, y, city, region, name, category, description, contacts) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+		`, nco.X, nco.Y, nco.City, nco.Region, nco.Name, nco.Category, nco.Description, nco.Contacts)
 	return err
 }
 
@@ -36,9 +36,9 @@ func (r *SQLiteRepository) GetByID(ID int64) (*models.NCO, error) {
 	var nco models.NCO
 
 	err := r.db.QueryRow(`
-        SELECT nco.X, nco.Y, nco.Name, nco.Owner
-        FROM nco WHERE user_id = ?
-    `, ID).Scan(&nco.X, &nco.Y, &nco.Name, &nco.Owner)
+        SELECT x, y, city, region, name, category, description, contacts
+        FROM nco WHERE id = ?
+    `, ID).Scan(&nco.X, &nco.Y, &nco.City, &nco.Region, &nco.Name, &nco.Category, &nco.Description, &nco.Contacts)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -48,6 +48,29 @@ func (r *SQLiteRepository) GetByID(ID int64) (*models.NCO, error) {
 	}
 
 	return &nco, nil
+}
+
+func (r *SQLiteRepository) GetAll() ([]*models.NCOSimple, error) {
+	var ncos []*models.NCOSimple
+
+	rows, err := r.db.Query("SELECT id, x, y, name FROM nco")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var nco models.NCOSimple
+		err := rows.Scan(&nco.ID, &nco.X, &nco.Y, &nco.Name)
+		if err != nil {
+			return nil, err
+		}
+		ncos = append(ncos, &nco)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return ncos, nil
 }
 
 func (r *SQLiteRepository) DeleteByID(ID int64) error {

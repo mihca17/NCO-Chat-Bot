@@ -15,7 +15,7 @@ var (
 	once          sync.Once
 )
 
-// Init инициализирует логгер с выводом в консоль и файл
+// Инициализация логгера с выводом в консоль и файл
 func Init(logFilename string) error {
 	var initErr error
 	once.Do(func() {
@@ -34,7 +34,7 @@ func Init(logFilename string) error {
 	return initErr
 }
 
-// Close закрывает файл логов
+// Функция закрытия соединения с файлом логов
 func Close() error {
 	if logFile != nil {
 		return logFile.Close()
@@ -42,12 +42,12 @@ func Close() error {
 	return nil
 }
 
-// Success логирует успешные операции
+// Логгирование успешных операций
 func Success(message string) {
 	successLogger.Println(message)
 }
 
-// Error логирует ошибки
+// Логгирование ошибок
 func Error(message string, err error) {
 	if err != nil {
 		errorLogger.Printf("%s: %v", message, err)
@@ -56,12 +56,12 @@ func Error(message string, err error) {
 	}
 }
 
-// Info логирует информационные сообщения
+// Логгирование информационных сообщений
 func Info(message string) {
 	infoLogger.Println(message)
 }
 
-// Fatal логирует фатальную ошибку и завершает программу
+// Логгирование фатальных ошибок и завершение выполнения программы
 func Fatal(message string, err error) {
 	if err != nil {
 		errorLogger.Fatalf("%s: %v", message, err)

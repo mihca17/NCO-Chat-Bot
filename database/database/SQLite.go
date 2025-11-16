@@ -55,8 +55,12 @@ func createTables(db *sql.DB) error {
             id INTEGER PRIMARY KEY,
             x DOUBLE NOT NULL,
             y DOUBLE NOT NULL,
-            name TEXT,
-            owner TEXT
+            city TEXT,
+			region TEXT,
+			name TEXT,
+			category TEXT,
+			description TEXT,
+			contacts TEXT
         )
     `)
 	if err != nil {

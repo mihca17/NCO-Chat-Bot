@@ -2,9 +2,12 @@ package main
 
 import (
 	"NCO-Chat-Bot/config"
+	"NCO-Chat-Bot/controllers"
 	"NCO-Chat-Bot/database/database"
 	"NCO-Chat-Bot/database/repository"
 	"NCO-Chat-Bot/logger"
+	"NCO-Chat-Bot/routers"
+	"NCO-Chat-Bot/services"
 	"log"
 
 	_ "modernc.org/sqlite"
@@ -27,7 +30,14 @@ func main() {
 
 	repo := repository.NewSQLiteRepository(db.GetDB(), &config)
 
-	err = StartServer("localhost", "8080", repo)
+	getService := services.NewGetService(repo)
+	getController := controllers.NewGetController(getService)
+
+	postService := services.NewPostService(repo)
+	postController := controllers.NewPostController(postService)
+
+	srv := routers.NewServer(config.Address, config.Port, getController, postController)
+	err = srv.Start()
 	if err != nil {
 		panic(err)
 	}

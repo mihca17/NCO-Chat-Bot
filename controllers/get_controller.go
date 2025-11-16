@@ -1,0 +1,100 @@
+package controllers
+
+import (
+	"NCO-Chat-Bot/models"
+	"NCO-Chat-Bot/services"
+	"fmt"
+	"net/http"
+	"strconv"
+)
+
+// NCOController - объединенный контроллер и обработчик для НКО
+type GetController struct {
+	g *services.GetService
+}
+
+func NewGetController(g *services.GetService) *GetController {
+	return &GetController{
+		g: g,
+	}
+}
+
+// ================== HTTP HANDLERS ==================
+
+// GetNCOByID - обработчик GET запроса для получения НКО по ID
+func (c *GetController) GetNCOByID(w http.ResponseWriter, r *http.Request) {
+	// Получаем параметр id из query string
+	idStr := r.URL.Query().Get("id")
+
+	if idStr == "" {
+		c.g.WriteJSON(w, http.StatusBadRequest, &models.Response{
+			Status: "error",
+			Error:  "Параметр id обязателен",
+		})
+		return
+	}
+
+	// Преобразуем строку в int64
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		c.g.WriteJSON(w, http.StatusBadRequest, &models.Response{
+			Status: "error",
+			Error:  "Параметр id должен быть числом",
+		})
+		return
+	}
+
+	// Проверяем, что id положительный
+	if id <= 0 {
+		c.g.WriteJSON(w, http.StatusBadRequest, &models.Response{
+			Status: "error",
+			Error:  "Параметр id должен быть положительным числом",
+		})
+		return
+	}
+
+	fmt.Printf("🔄 Обработчик: получен GET запрос с id=%s\n", id)
+
+	// Вызываем бизнес-логику
+	response := c.g.GetNCOByID(id)
+
+	// Отправляем ответ
+	if response.Status == "error" {
+		c.g.WriteJSON(w, http.StatusNotFound, response)
+	} else {
+		c.g.WriteJSON(w, http.StatusOK, response)
+	}
+}
+
+// GetNCOsByCity - обработчик GET запроса для получения НКО по городу
+//func (c *GetController) GetNCOsByCity(w http.ResponseWriter, r *http.Request) {
+//	city := r.URL.Query().Get("city")
+//
+//	if city == "" {
+//		c.g.WriteJSON(w, http.StatusBadRequest, &models.Response{
+//			Status: "error",
+//			Error:  "Параметр city обязателен",
+//		})
+//		return
+//	}
+//
+//	fmt.Printf("🔄 Обработчик: получен GET запрос с city=%s\n", city)
+//
+//	// Вызываем бизнес-логику
+//	response := c.g.getNCOsByCity(city)
+//
+//	if response.Status == "error" {
+//		c.g.WriteJSON(w, http.StatusNotFound, response)
+//	} else {
+//		c.g.WriteJSON(w, http.StatusOK, response)
+//	}
+//}
+
+// GetAllNCOs - обработчик GET запроса для получения всех НКО
+func (c *GetController) GetAllNCOs(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("🔄 Обработчик: получен GET запрос на все НКО\n")
+
+	// Вызываем бизнес-логику
+	response := c.g.GetAllNCOs()
+	c.g.WriteJSON(w, http.StatusOK, response)
+}
