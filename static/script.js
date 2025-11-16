@@ -2,6 +2,11 @@ let myMap;
 let allPlacemarks = [];
 let filteredCities = [];
 
+const button = document.getElementById('add-NCO')
+button.addEventListener('click', function(){
+    window.location.href = 'static/nco.html';
+});
+
 // Города присутствия Росатома
 const cities = [
     { 
