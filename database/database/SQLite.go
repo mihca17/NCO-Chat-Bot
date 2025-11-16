@@ -65,8 +65,8 @@ func createTables(db *sql.DB) error {
 			region TEXT,
 			name TEXT,
 			category TEXT,
-			description TEXT,
-			contacts TEXT,
+			description TEXT DEFAULT 'Описание не указано',
+			contacts TEXT DEFAULT 'Контакты не указаны',
 			status TEXT DEFAULT 'Under Consideration'
         )
     `)
